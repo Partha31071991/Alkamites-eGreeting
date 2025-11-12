@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Alkem Premium E-Greetings Portal</title>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Montserrat:wght@400;700&family=Playfair+Display:wght@400;700&family=Great+Vibes&family=Raleway:wght@400;700&family=Dancing+Script:wght@400;700&family=Lora:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --default-accent: #205e99;
+  }
+  body { background:#ececec; margin:0; padding:18px; font-family:'Montserrat',sans-serif;}
+  .outer-wrap { display:flex; flex-wrap:wrap; gap:18px; justify-content:center;}
+  .portal-container { flex:1 1 320px; max-width:340px; min-width:240px; background:#fff8dc; border-radius:14px; box-shadow:0 6px 20px #00000015; padding:12px; }
+  .input-section { margin-bottom:12px;}
+  label { font-weight:700; color:#715c21; font-size:0.95em; display:block; margin-bottom:6px;}
+  input[type="text"], select, textarea, input[type="range"], .file-input {
+    width:100%; font-size:0.95em; border-radius:8px; border:2px solid #dcbf58; margin-top:3px;
+    box-sizing:border-box; font-family:'Montserrat',sans-serif; padding:8px;
+  }
+  textarea { resize:vertical; min-height:56px; }
+  .preview-container { flex:1 1 420px; min-width:320px; max-width:420px; margin:0 auto; display:flex; align-items:center; justify-content:center;}
+  .e-greeting-card {
+    position:relative; width:380px; height:600px; border-radius:16px; overflow:hidden;
+    background:var(--card-bg, #fff8dc); box-shadow:0 10px 30px rgba(0,0,0,0.12);
+    border:3px solid var(--accent, var(--default-accent));
+    display:flex; flex-direction:column; align-items:center; padding:8px 12px; box-sizing:border-box;
+  }
+  #bgImage { position:absolute; inset:0; background-size:cover; background-position:center; z-index:0; }
+  #bgOverlay { position:absolute; inset:0; background-color:transparent; z-index:1; pointer-events:none; }
+  .e-greeting-card > *:not(#bgImage):not(#bgOverlay) { position:relative; z-index:5; }
+  .alkem-logo-img { width:56px; height:auto; margin-top:6px; display:block; object-fit:contain; }
+  .eg-heading {
+    font-weight:700; font-size:28px;
+    margin:8px 0 6px 0; color:var(--accent, var(--default-accent));
+    text-align:center; line-height:1.05;
+  }
+  .eg-photo-frame {
+    width:138px; height:138px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    background:rgba(255,255,255,0.6); margin:6px auto; border:4px solid var(--accent, var(--default-accent));
+    box-sizing:border-box;
+  }
+  .eg-photo { width:130px; height:130px; object-fit:cover; border-radius:50%; display:block; background:#fff; }
+  .eg-text-block { text-align:center; max-width:320px; margin:6px auto 0; color:var(--text-color,#333); }
+  .eg-name { font-weight:800; font-size:1.3rem; margin-bottom:8px; opacity:1; }
+  .eg-hq { font-weight:800; font-size:1rem; margin-bottom:20px; opacity:1; }
+  .eg-highlight {
+    font-style:italic; font-weight:600; font-size:1rem; margin-bottom:60px; opacity:1;
+  }
+  .eg-bottom-allbest {
+    font-family:'Poppins',sans-serif; font-weight:700; font-size:1.6rem;
+    position:absolute; bottom:12px; left:0; width:100%; text-align:center;
+    color:var(--accent, var(--default-accent));
+    z-index:10;
+  }
+  @media (max-width:480px){
+    body{padding:12px;}
+    .e-greeting-card{ width:360px; height:560px; transform:scale(0.95); transform-origin:top center;}
+  }
+</style>
+</head>
+
+<body>
+<div class="outer-wrap">
+  <form class="portal-container" autocomplete="off" id="controls">
+    <div class="input-section">
+      <label for="themeColor">Greeting Theme Color (card background):</label>
+      <select id="themeColor">
+        <option value="#fff8dc">Gold (default)</option>
+        <option value="#ffffff">White</option>
+        <option value="#ebdcfb">Purple</option>
+        <option value="#e7f0fd">Blue</option>
+        <option value="#ffe4ee">Light Pink</option>
+      </select>
+    </div>
+    <div class="input-section">
+      <label for="headingDropdown">Heading:</label>
+      <select id="headingDropdown" onchange="toggleManualInput()">
+        <option value="Congratulation">Congratulation</option>
+        <option value="Keep It Up">Keep It Up</option>
+        <option value="Well Done">Well Done</option>
+        <option value="Good Effort">Good Effort</option>
+        <option value="You Rocks">You Rocks</option>
+        <option value="manual">Manual Entry</option>
+      </select>
+      <input type="text" id="manualHeadingInput" placeholder="Type Heading Here" style="display:none; margin-top:8px;" />
+    </div>
+
+    <!-- Premium Font Options -->
+    <div class="input-section">
+      <label for="headingFont">Heading Font:</label>
+      <select id="headingFont">
+        <option value="'Montserrat',sans-serif" selected>Montserrat (Default)</option>
+        <option value="'Poppins',sans-serif">Poppins</option>
+        <option value="'Playfair Display',serif">Playfair Display</option>
+        <option value="'Great Vibes',cursive">Great Vibes</option>
+        <option value="'Raleway',sans-serif">Raleway</option>
+        <option value="'Dancing Script',cursive">Dancing Script</option>
+        <option value="'Lora',serif">Lora</option>
+      </select>
+    </div>
+
+    <div class="input-section">
+      <label for="headingSize">Heading Size:</label>
+      <input type="range" id="headingSize" min="20" max="44" step="2" value="28" />
+    </div>
+
+    <div class="input-section">
+      <label for="headingColor">Heading / Accent Color:</label>
+      <select id="headingColor">
+        <option value="#205e99" selected>Deep Blue</option>
+        <option value="#c39b3b">Gold</option>
+        <option value="#2b59a3">Royal Blue</option>
+        <option value="#c42d2d">Ruby Red</option>
+        <option value="#7c2d8e">Purple</option>
+        <option value="#17805b">Emerald</option>
+      </select>
+    </div>
+
+    <div class="input-section">
+      <label for="textColor">Other Text Color:</label>
+      <select id="textColor">
+        <option value="#000000">Black</option>
+        <option value="#205e99" selected>Deep Blue</option>
+        <option value="#555d20">Classic Olive</option>
+        <option value="#374151">Slate</option>
+      </select>
+    </div>
+
+    <div class="input-section">
+      <label for="photoInput">Alkemite Photo:</label>
+      <input type="file" accept="image/*" id="photoInput" />
+    </div>
+
+    <div class="input-section">
+      <label for="nameInput">Name:</label>
+      <input type="text" id="nameInput" placeholder="Enter Name" />
+    </div>
+
+    <div class="input-section">
+      <label for="hqInput">HQ:</label>
+      <input type="text" id="hqInput" placeholder="Enter HQ (Location)" />
+    </div>
+
+    <div class="input-section">
+      <label for="highlightInput">Key Highlight:</label>
+      <textarea id="highlightInput" placeholder="Highlight/Remark" rows="2"></textarea>
+    </div>
+
+    <div class="input-section">
+      <label for="bgSelect">Select Background Theme:</label>
+      <select id="bgSelect">
+        <option value="Background 1.jpg">Background 1 (default)</option>
+        <option value="Background 2.jpg">Background 2</option>
+        <option value="Background 3.jpg">Background 3</option>
+        <option value="Background 4.avif">Background 4</option>
+        <option value="custom">Custom Upload...</option>
+      </select>
+      <input type="file" id="bgInput" accept="image/*" style="margin-top:8px;" />
+    </div>
+
+    <div class="input-section">
+      <label for="bgOpacity">Background Image Transparency:</label>
+      <input type="range" id="bgOpacity" min="0" max="1" step="0.05" value="0.35" />
+    </div>
+  </form>
+
+  <div class="preview-container">
+    <div class="e-greeting-card" id="egreetingPreview" style="--accent: #205e99;">
+      <div id="bgImage"></div>
+      <div id="bgOverlay"></div>
+      <img src="Alkem-Logo.png" alt="Alkem Logo" class="alkem-logo-img" />
+      <div class="eg-heading" id="headingText" style="font-family:'Montserrat',sans-serif;">Congratulation</div>
+      <div class="eg-photo-frame" id="photoFrame">
+        <img src="" alt="Alkemite Photo" class="eg-photo" id="photoPreview" style="display:none" />
+      </div>
+      <div class="eg-text-block">
+        <div class="eg-name" id="previewName"></div>
+        <div class="eg-hq" id="previewHQ"></div>
+        <div class="eg-highlight" id="previewHighlight"></div>
+      </div>
+      <div class="eg-bottom-allbest" id="allBestText">All The Best</div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const eg=document.getElementById('egreetingPreview');
+  const bgImage=document.getElementById('bgImage');
+  const bgOverlay=document.getElementById('bgOverlay');
+  const headingText=document.getElementById('headingText');
+  const headingColorSel=document.getElementById('headingColor');
+  const photoFrame=document.getElementById('photoFrame');
+  const photoPreview=document.getElementById('photoPreview');
+  const allBestText=document.getElementById('allBestText');
+  const themeColor=document.getElementById('themeColor');
+  const headingDropdown=document.getElementById('headingDropdown');
+  const manualHeadingInput=document.getElementById('manualHeadingInput');
+  const headingFont=document.getElementById('headingFont');
+  const headingSize=document.getElementById('headingSize');
+  const textColor=document.getElementById('textColor');
+  const nameInput=document.getElementById('nameInput');
+  const hqInput=document.getElementById('hqInput');
+  const highlightInput=document.getElementById('highlightInput');
+  const bgSelect=document.getElementById('bgSelect');
+  const bgInput=document.getElementById('bgInput');
+  const bgOpacity=document.getElementById('bgOpacity');
+  const photoInput=document.getElementById('photoInput');
+  const previewName=document.getElementById('previewName');
+  const previewHQ=document.getElementById('previewHQ');
+  const previewHighlight=document.getElementById('previewHighlight');
+
+  function toggleManualInput(){
+    manualHeadingInput.style.display = headingDropdown.value === 'manual' ? 'block' : 'none';
+  }
+  window.toggleManualInput = toggleManualInput;
+
+  function updateAccent(color){
+    eg.style.setProperty('--accent', color);
+    eg.style.borderColor = color;
+    photoFrame.style.border = '4px solid ' + color;
+    allBestText.style.color = color;
+    headingText.style.color = color;
+  }
+
+  function updateCardBg(){ eg.style.background = themeColor.value; }
+
+  function updateBgImageFromOption(val){
+    if(!val || val === 'custom'){ bgImage.style.backgroundImage = ''; return; }
+    bgImage.style.backgroundImage = `url("${val}")`;
+  }
+
+  function updateOverlay(){
+    let op = parseFloat(bgOpacity.value);
+    bgOverlay.style.backgroundColor = `rgba(255,255,255,${1 - op})`;
+  }
+
+  function updateTextColors(){
+    previewName.style.color = textColor.value;
+    previewHQ.style.color = textColor.value;
+    previewHighlight.style.color = textColor.value;
+  }
+
+  function updatePreview(){
+    updateAccent(headingColorSel.value);
+    updateCardBg();
+    headingText.style.fontFamily = headingFont.value;
+    headingText.style.fontSize = headingSize.value + 'px';
+    headingText.textContent = headingDropdown.value === 'manual'
+      ? (manualHeadingInput.value || '')
+      : headingDropdown.value;
+    previewName.textContent = nameInput.value || '';
+    previewHQ.textContent = hqInput.value || '';
+    previewHighlight.textContent = highlightInput.value || '';
+    updateTextColors();
+    updateOverlay();
+  }
+
+  bgSelect.addEventListener('change', function(e){
+    const val = e.target.value;
+    if(val === 'custom'){ bgImage.style.backgroundImage = ''; }
+    else { updateBgImageFromOption(val); }
+    updatePreview();
+  });
+
+  bgInput.addEventListener('change', function(e){
+    const f = e.target.files[0];
+    if(!f) return;
+    const url = URL.createObjectURL(f);
+    bgImage.style.backgroundImage = `url("${url}")`;
+    bgSelect.value = 'custom';
+    updatePreview();
+  });
+
+  photoInput.addEventListener('change', function(e){
+    const f = e.target.files[0];
+    if(!f){ photoPreview.src = ''; photoPreview.style.display = 'none'; return; }
+    photoPreview.src = URL.createObjectURL(f);
+    photoPreview.style.display = 'block';
+  });
+
+  [themeColor, headingDropdown, manualHeadingInput, headingFont, headingSize, headingColorSel, textColor, nameInput, hqInput, highlightInput, bgOpacity].forEach(el=>{
+    el.addEventListener('input', updatePreview);
+  });
+
+  headingColorSel.addEventListener('input', function(){ updateAccent(this.value); });
+
+  updateBgImageFromOption('Background 1.jpg');
+  updatePreview();
+})();
+</script>
+</body>
+</html>
